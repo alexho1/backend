@@ -76,9 +76,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'solarpv',
-        'USER': 'solarpv',
-        'PASSWORD': 'solarpv',
+        'NAME': 'backend',
+        'USER': 'backend',
+        'PASSWORD': 'backend',
         'HOST': '127.0.0.1',
         'PORT': '3307',
     }
