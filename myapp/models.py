@@ -1,6 +1,18 @@
 from django.db import models
 
+
 # Create your models here.
+
+class Client(models.Model):
+    client_name = models.CharField(max_length=255)
+    client_type = models.CharField(max_length=255)
+
+
+class TestStandard(models.Model):
+    standard_name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    published_date = models.CharField(max_length=255)
+
 
 class User(models.Model):
     username = models.CharField(max_length=255)
@@ -12,33 +24,7 @@ class User(models.Model):
     phone = models.CharField(max_length=255)
     cellphone = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    client_id = models.CharField(max_length=255)
-
-
-class Certificate(models.Model):
-    user_id = models.CharField(max_length=255)
-    report_number = models.CharField(max_length=255)
-    issue_date = models.CharField(max_length=255)
-    standard_id = models.CharField(max_length=255)
-    location_id = models.CharField(max_length=255)
-    model_number = models.CharField(max_length=255)
-
-
-class TestStandard(models.Model):
-    standard_name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    published_date = models.CharField(max_length=255)
-
-
-class Service(models.Model):
-    service_name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    published_date = models.CharField(max_length=255)
-
-
-class Client(models.Model):
-    client_name = models.CharField(max_length=255)
-    client_type = models.CharField(max_length=255)
+    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
 class Location(models.Model):
@@ -82,7 +68,29 @@ class Product(models.Model):
     connector_type = models.CharField(max_length=255)
 
 
+class Certificate(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    report_number = models.CharField(max_length=255)
+    issue_date = models.CharField(max_length=255)
+    standard_id = models.ForeignKey(TestStandard, on_delete=models.CASCADE)
+    location_id = models.ForeignKey(Location, on_delete=models.CASCADE)
+    model_number = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class Service(models.Model):
+    service_name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    published_date = models.CharField(max_length=255)
+    standard_id = models.ForeignKey(TestStandard, on_delete=models.CASCADE, null=True)
+
+
+class TestSequence(models.Model):
+    sequence_name = models.CharField(max_length=255)
+
+
 class PerformanceData(models.Model):
+    model_id = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    sequence_id = models.ForeignKey(TestSequence, on_delete=models.CASCADE, null=True)
     max_system_voltage = models.CharField(max_length=255)
     rated_voc = models.CharField(max_length=255)
     rated_isc = models.CharField(max_length=255)
@@ -90,7 +98,3 @@ class PerformanceData(models.Model):
     rated_imp = models.CharField(max_length=255)
     rated_pmp = models.CharField(max_length=255)
     rated_ff = models.CharField(max_length=255)
-
-
-class TestSequence(models.Model):
-    sequence_name = models.CharField(max_length=255)
